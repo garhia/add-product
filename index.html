@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script>
+        function createProduct() {
+            const success = document.getElementById('success');
+            const loader = document.getElementById('loadingDiv');
+            loader.classList.remove('hide');
+            loader.classList.add('loadingDiv');
+            const drug = {
+                name: document.getElementById('productName').value,
+                medicalName: document.getElementById('medicalName').value,
+                companyName: document.getElementById('companyName').value,
+                form: document.getElementById('form').value,
+            }
+            console.log(drug);
+            fetch('https://pharm-pro.herokuapp.com/api/products', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(drug)
+            }).then(res => res.json()).then(result => {
+                console.log(result);
+                document.getElementById('productName').value = '';
+                document.getElementById('medicalName').value = '';
+                document.getElementById('companyName').value = '';
+                success.classList.remove('hide');
+                success.classList.add('success');
+                setTimeout(() => {
+                    success.classList.remove('success');
+                    success.classList.add('hide');                    
+                }, 2000)
+                loader.classList.remove('loadingDiv');
+                loader.classList.add('hide');
+            }).catch(e => {
+                console.log('edjhedß')
+                console.log(e);
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <main>
+        <div class="hide" id='loadingDiv'>
+            <img src='./images/loading.svg' height="200px", width="200px" />
+        </div>
+        <div class="hide" id="success">
+            <img src="./images/success.webp" height="30px" width="30px" />
+            <p> Successfully added product</p>
+        </div>
+        <form onsubmit="event.preventDefault(); createProduct()">
+            <div class="form-group">
+                <label>
+                    Product Name
+                </label><br />
+                <input type="text" id="productName" required />
+            </div>
+
+
+            <div class="form-group">
+                <label>
+                    Medical Name
+                </label><br />
+                <input type="text" id="medicalName" required />
+            </div>
+
+
+            <div class="form-group">
+                <label>
+                    Company Name
+                </label><br />
+                <input type="text" id="companyName" required />
+            </div>
+
+
+            <div class="form-group">
+                <label>
+                    product Form
+                </label> <br />
+                <select id="form">
+                    <option value="Syrup">
+                        Syrup
+                    </option>
+                    <option value="Tablet">
+                        Tablet
+                    </option>
+                    <option value="injection"> Injection</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Submit" id="submitBtn" />
+        </form>
+    </main>
+
+</body>
+
+</html>
