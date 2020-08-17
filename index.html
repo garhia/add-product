@@ -16,7 +16,7 @@
     </div>
     <div class="hide" id="success">
       <img src="./images/success.webp" height="30px" width="30px" />
-      <p> Successfully added product</p>
+      <p> Successfully added products</p>
     </div>
     <form onsubmit="event.preventDefault()">
 
@@ -48,15 +48,26 @@
             product Form
           </label> <br />
           <select id="form">
-            <option value="Syrup">
-              Syrup
-            </option>
-            <option value="Tablet">
-              Tablet
-            </option>
+            <option value="Syrup">Syrup</option>
+            <option value="Tablet">Tablet</option>
             <option value="Caplet"> Caplet </option>
             <option value="Capsule"> Capsule</option>
             <option value="injection"> Injection</option>
+            <option value="Oral Suspension">Oral Suspension</option>
+            <option value="Ointment">Ointment</option>
+            <option value="Liniment">Liniment</option>
+            <option value="Cream">Cream</option>
+            <option value="Spray">Spray</option>
+            <option value="Lotion">Lotion</option>
+            <option value="Gel">Gel</option>
+            <option value="Plaster">Plaster</option>
+            <option value="Liquid">Liquid</option>
+            <option value="Oral drip">Oral drip</option>
+            <option value="Oral liquid">Oral liquid</option>
+            <option value="Suppository">Suppository</option>
+            <option value="Granules">Granules</option>
+            <option value="Powder">Powder</option>
+            <option value="Oral drops">Oral drops</option>
           </select>
         </div>
 
@@ -76,47 +87,47 @@
 
         </div>
       </div>
-      <input type="submit" value="Submit" id="submitBtn" />
+      <input type="submit" value="Submit" id="submitBtn" onclick="createProducts()" />
     </form>
   </main>
 
 
   <script>
-      const products = {};
+      let products = {};
       const prouctNameInput = document.getElementById('productName');
       const medicalNameInput = document.getElementById('medicalName');
       const companyNameInput = document.getElementById('companyName');
       const formInput = document.getElementById('form');
-      function createProduct() {
+
+      const submitBtn = document.getElementById('submitBtn');
+
+      function createProducts() {
         const success = document.getElementById('success');
         const loader = document.getElementById('loadingDiv');
         loader.classList.remove('hide');
         loader.classList.add('loadingDiv');
-        const drug = {
-          name: prouctNameInput.value,
-          medicalName: medicalNameInput.value,
-          companyName: companyNameInput.value,
-          form: formInput.value,
-        }
-        console.log(drug);
-        fetch('https://pharm-pro.herokuapp.com/api/products', {
+        submitBtn.disabled = true;
+        const postProducts = Object.values(products);
+        fetch('https://pharm-pro.herokuapp.com/api/products/many', {
           method: 'post',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(drug)
+          body: JSON.stringify(postProducts.flat())
         }).then(res => res.json()).then(result => {
           console.log(result);
-          document.getElementById('productName').value = '';
-          document.getElementById('medicalName').value = '';
-          document.getElementById('companyName').value = '';
+          prouctNameInput.value = '';
+          medicalNameInput.value = '';
+          companyNameInput.value = '';
           success.classList.remove('hide');
           success.classList.add('success');
           setTimeout(() => {
             success.classList.remove('success');
             success.classList.add('hide');
-          }, 2000)
+          }, 2000);
+          products = {};
+          submitBtn.disabled = false;
           loader.classList.remove('loadingDiv');
           loader.classList.add('hide');
         }).catch(e => {

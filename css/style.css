@@ -28,6 +28,7 @@ main{
   background-color: transparent;
   border: none;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .row-col {
@@ -87,6 +88,7 @@ main{
   height: 50px;
   margin-top: 10px;
   float: right;
+  cursor: pointer;
 }
 
 .success {
@@ -99,6 +101,7 @@ main{
   position: absolute;
   top: 100px;
   left: 450px;
+  z-index: 2;
   -webkit-animation:spin 4s linear infinite;
   -moz-animation:spin 4s linear infinite;
   animation:spin 4s linear infinite;
