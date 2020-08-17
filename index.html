@@ -165,13 +165,14 @@
             const hr = document.createElement('hr');
             divCon.appendChild(medP);
             divCon.appendChild(hr);
-            products[medName].forEach(ele => {
+            products[medName].forEach((ele, index) => {
               const productRow = document.createElement('div');
 
               productRow.classList.add('row');
               const colOne = document.createElement('p');
               const colTwo = document.createElement('p');
               const colThree = document.createElement('p');
+              const colFour = document.createElement('p');
 
               colOne.innerHTML = ele.name
               colOne.classList.add('row-col');
@@ -182,9 +183,20 @@
               colThree.innerHTML = ele.form;
               colThree.classList.add('row-col');
 
+              colFour.innerHTML = 'X';
+              colFour.id = `${medName}-${index}`;
+              colFour.classList.add('close-row-col');
+              colFour.addEventListener('click', (event) => {
+                const med = event.target.id.split('-')[0];
+                const pos = event.target.id.split('-')[1];
+                products[med].splice(pos, 1);
+                createProductDiv();
+              })
+
               productRow.appendChild(colOne);
               productRow.appendChild(colTwo);
               productRow.appendChild(colThree);
+              productRow.appendChild(colFour);
 
               divCon.appendChild(productRow)
             })

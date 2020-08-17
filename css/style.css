@@ -123,6 +123,17 @@ main{
   padding: 15px;
 }
 
+.close-row-col {
+  display: inline-block;
+  width: 15px;
+  margin-left: 60px;
+  color: red;
+  text-align: center;
+  font-size: 18px;
+  cursor: pointer;
+  overflow-wrap: break-word;
+}
+
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
