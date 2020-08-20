@@ -18,6 +18,10 @@
       <img src="./images/success.webp" height="30px" width="30px" />
       <p> Successfully added products</p>
     </div>
+    <div class="hide" id="error">
+      <img src="./images/error.svg" height="30px" width="30px" />
+      <p> Error submitting products</p>
+    </div>
     <a class="left-link" href="https://raw.githack.com/garhia/add-product/development/products.html">All Products</a>
     <form onsubmit="event.preventDefault()">
       <div id="top-div" class="form-group">
@@ -105,6 +109,7 @@
 
       function createProducts() {
         const success = document.getElementById('success');
+        const error = document.getElementById('error');
         const loader = document.getElementById('loadingDiv');
         loader.classList.remove('hide');
         loader.classList.add('loadingDiv');
@@ -134,8 +139,15 @@
           loader.classList.remove('loadingDiv');
           loader.classList.add('hide');
         }).catch(e => {
-          console.log('edjhedß')
-          console.log(e);
+          loader.classList.remove('loadingDiv');
+          loader.classList.add('hide');
+          error.classList.remove('hide');
+          error.classList.add('success');
+          setTimeout(() => {
+            error.classList.remove('success');
+            error.classList.add('hide');
+          }, 2000);
+          submitBtn.disabled = false;
         })
       }
   
