@@ -219,6 +219,28 @@ main{
   top: 10px;
 }
 
+#search {
+  height: 30px;
+  padding: 5px;
+  width: 80%;
+}
+
+.search-btn {
+  height: 30px;
+  width: 20%;
+  float: right;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: none;
+  background-color: #2196f3;
+  color: white;
+}
+
+.search-div {
+  width: 250px;
+  margin-bottom: 30px;
+}
+
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

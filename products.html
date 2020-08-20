@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>All products</title>
   <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -86,6 +87,10 @@
 
     <a class="left-link" href="https://raw.githack.com/garhia/add-product/development/index.html">Product Form</a>
     <h2 style="text-align: center; margin-bottom: 40px;"> All products</h2>
+    <div class="search-div">
+      <input type="text" id="search" placeholder="Search Product" />
+      <button class="search-btn" onclick="searchProducts()"><i class="fa fa-search"></i></button>
+    </div>
     <div id="products">
     </div>
   </main>
@@ -128,62 +133,78 @@
       deleteSelectForm.innerHTML = form;
     }
 
+    const displayProductsDiv = (products) => {
+      productsDiv.innerHTML = '';
+      products.forEach(product => {
+        const row = document.createElement('p');
+        const med = document.createElement('p');
+        med.innerHTML = product.medicalName;
+        med.classList.add('row-col');
+        med.classList.add('p-row-col');
+
+        const name = document.createElement('p');
+        name.innerHTML = product.name;
+        name.classList.add('row-col');
+        name.classList.add('p-row-col');
+
+        const comapny = document.createElement('p');
+        comapny.innerHTML = product.companyName;
+        comapny.classList.add('row-col');
+        comapny.classList.add('p-row-col');
+
+        const form = document.createElement('p');
+        form.innerHTML = product.form;
+        form.classList.add('row-col');
+        form.classList.add('p-row-col');
+
+        const editBtn = document.createElement('button');
+        editBtn.classList.add('p-btn');
+        editBtn.style.backgroundColor = 'blue';
+        editBtn.style.color = 'white';
+        editBtn.innerHTML = 'Edit';
+        editBtn.addEventListener('click', () => {
+          displayEditForm(product._id,
+            product.medicalName, product.name, product.companyName, product.form)
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('p-btn');
+        deleteBtn.style.backgroundColor = 'red';
+        deleteBtn.style.color = 'white';
+        deleteBtn.innerHTML = 'Delete';
+        deleteBtn.addEventListener('click', () => {
+          displayDeleteForm(product._id,
+            product.medicalName, product.name, product.companyName, product.form)
+        })
+
+        row.appendChild(med);
+        row.appendChild(name);
+        row.appendChild(comapny);
+        row.appendChild(form);
+        row.appendChild(deleteBtn);
+        row.appendChild(editBtn);
+
+        row.classList.add('p-row')
+        productsDiv.appendChild(row);
+      })
+    }
+
     const loadProducts = () => {
       fetch('https://pharm-pro.herokuapp.com/api/products', { method: 'GET' }).then(res => res.json()).then(products => {
         loader.classList.remove('loadingDiv');
         loader.classList.add('hide');
-        products.forEach(product => {
-          const row = document.createElement('p');
-          const med = document.createElement('p');
-          med.innerHTML = product.medicalName;
-          med.classList.add('row-col');
-          med.classList.add('p-row-col');
+        displayProductsDiv(products);
+      })
+    }
 
-          const name = document.createElement('p');
-          name.innerHTML = product.name;
-          name.classList.add('row-col');
-          name.classList.add('p-row-col');
-
-          const comapny = document.createElement('p');
-          comapny.innerHTML = product.companyName;
-          comapny.classList.add('row-col');
-          comapny.classList.add('p-row-col');
-
-          const form = document.createElement('p');
-          form.innerHTML = product.form;
-          form.classList.add('row-col');
-          form.classList.add('p-row-col');
-
-          const editBtn = document.createElement('button');
-          editBtn.classList.add('p-btn');
-          editBtn.style.backgroundColor = 'blue';
-          editBtn.style.color = 'white';
-          editBtn.innerHTML = 'Edit';
-          editBtn.addEventListener('click', () => {
-            displayEditForm(product._id,
-              product.medicalName, product.name, product.companyName, product.form)
-          });
-
-          const deleteBtn = document.createElement('button');
-          deleteBtn.classList.add('p-btn');
-          deleteBtn.style.backgroundColor = 'red';
-          deleteBtn.style.color = 'white';
-          deleteBtn.innerHTML = 'Delete';
-          deleteBtn.addEventListener('click', () => {
-            displayDeleteForm(product._id,
-              product.medicalName, product.name, product.companyName, product.form)
-          })
-
-          row.appendChild(med);
-          row.appendChild(name);
-          row.appendChild(comapny);
-          row.appendChild(form);
-          row.appendChild(deleteBtn);
-          row.appendChild(editBtn);
-
-          row.classList.add('p-row')
-          productsDiv.appendChild(row);
-        })
+    const searchProducts = () => {
+      const searchString = document.getElementById('search').value;
+      loader.classList.remove('hide');
+      loader.classList.add('loadingDiv');
+      fetch(`https://pharm-pro.herokuapp.com/api/products?search=${searchString}`, { method: 'GET' }).then(res => res.json()).then(products => {
+        loader.classList.remove('loadingDiv');
+        loader.classList.add('hide');
+        displayProductsDiv(products);
       })
     }
 
