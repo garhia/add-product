@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>All products</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <main>
+
+    <div id='loadingDiv' class="loadingDiv">
+      <img src='./images/loading.svg' height="200px" , width="200px" />
+    </div>
+    <div class="hide" id="success">
+      <img src="./images/success.webp" height="30px" width="30px" />
+      <p> Successfully changed</p>
+    </div>
+
+    <div class="modal" id="updateForm">
+      <div class="modal-content">
+        <form onsubmit="event.preventDefault(); editApiCall();">
+          <div class="form-group">
+            <label> Medical Name: </label>
+            <input class="edit-input" type="text" id="updateMedName" /> <br />
+          </div>
+
+          <div class="form-group">
+            <label> Product Name: </label>
+            <input class="edit-input" type="text" id="updateName" /><br />
+          </div>
+
+          <div class="form-group">
+            <label> Company Name: </label>
+            <input class="edit-input" type="text" id="updateCompanyName" /> <br />
+          </div>
+
+          <div class="form-group">
+            <label> Form: </label>
+            <select id="updateSelectForm">
+              <option value="Syrup">Syrup</option>
+              <option value="Tablet">Tablet</option>
+              <option value="Caplet"> Caplet </option>
+              <option value="Capsule"> Capsule</option>
+              <option value="injection"> Injection</option>
+              <option value="Oral Suspension">Oral Suspension</option>
+              <option value="Ointment">Ointment</option>
+              <option value="Liniment">Liniment</option>
+              <option value="Cream">Cream</option>
+              <option value="Spray">Spray</option>
+              <option value="Lotion">Lotion</option>
+              <option value="Gel">Gel</option>
+              <option value="Plaster">Plaster</option>
+              <option value="Liquid">Liquid</option>
+              <option value="Oral drip">Oral drip</option>
+              <option value="Oral liquid">Oral liquid</option>
+              <option value="Suppository">Suppository</option>
+              <option value="Granules">Granules</option>
+              <option value="Powder">Powder</option>
+              <option value="Oral drops">Oral drops</option>
+              <option value="Inhaler">Inhaler</option>
+              <option value="Infusion">Infusion</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <input class="update-btn" type="submit" value="Update" />
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="deleteForm">
+      <div class="modal-content">
+        <p class="row-desc">Medical Name: <span id="deleteMedName"></span></p>
+        <p class="row-desc">Company Name: <span id="deleteCompanyName"></span></p>
+        <p class="row-desc">Product Name: <span id="deleteProductName"></span></p>
+        <p class="row-desc">Form: <span id="deleteSelectForm"></span></p>
+        <button class="delete-btn" onclick="deleteApiCall()">Delete</button>
+      </div>
+    </div>
+
+    <a class="left-link" href="/index.html">Product Form</a>
+    <h2 style="text-align: center; margin-bottom: 40px;"> All products</h2>
+    <div id="products">
+    </div>
+  </main>
+  <script>
+    const loader = document.getElementById('loadingDiv');
+    const productsDiv = document.getElementById('products');
+    const success = document.getElementById('success');
+
+    const editModal = document.getElementById('updateForm');
+
+    const updateMedName = document.getElementById('updateMedName');
+    const updateName = document.getElementById('updateName');
+    const updateCompanyName = document.getElementById('updateCompanyName');
+    const updateSelectForm = document.getElementById('updateSelectForm');
+
+    const deleteModal = document.getElementById('deleteForm');
+
+    const deleteMedName = document.getElementById('deleteMedName');
+    const deleteCompanyName = document.getElementById('deleteCompanyName');
+    const deleteProductName = document.getElementById('deleteProductName');
+    const deleteSelectForm = document.getElementById('deleteSelectForm');
+
+    let productId = '';
+
+    const displayEditForm = (id, medName, name, companyName, form) => {
+      editModal.style.display = 'block';
+      productId = id;
+      updateMedName.value = medName;
+      updateSelectForm.value = form.trim();
+      updateCompanyName.value = companyName;
+      updateName.value = name;
+    }
+
+    const displayDeleteForm = (id, medName, name, companyName, form) => {
+      deleteModal.style.display = 'block';
+      productId = id;
+      deleteCompanyName.innerHTML = companyName;
+      deleteMedName.innerHTML = medName;
+      deleteProductName.innerHTML = name;
+      deleteSelectForm.innerHTML = form;
+    }
+
+    const loadProducts = () => {
+      fetch('https://pharm-pro.herokuapp.com/api/products', { method: 'GET' }).then(res => res.json()).then(products => {
+        loader.classList.remove('loadingDiv');
+        loader.classList.add('hide');
+        products.forEach(product => {
+          const row = document.createElement('p');
+          const med = document.createElement('p');
+          med.innerHTML = product.medicalName;
+          med.classList.add('row-col');
+          med.classList.add('p-row-col');
+
+          const name = document.createElement('p');
+          name.innerHTML = product.name;
+          name.classList.add('row-col');
+          name.classList.add('p-row-col');
+
+          const comapny = document.createElement('p');
+          comapny.innerHTML = product.companyName;
+          comapny.classList.add('row-col');
+          comapny.classList.add('p-row-col');
+
+          const form = document.createElement('p');
+          form.innerHTML = product.form;
+          form.classList.add('row-col');
+          form.classList.add('p-row-col');
+
+          const editBtn = document.createElement('button');
+          editBtn.classList.add('p-btn');
+          editBtn.style.backgroundColor = 'blue';
+          editBtn.style.color = 'white';
+          editBtn.innerHTML = 'Edit';
+          editBtn.addEventListener('click', () => {
+            displayEditForm(product._id,
+              product.medicalName, product.name, product.companyName, product.form)
+          });
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.classList.add('p-btn');
+          deleteBtn.style.backgroundColor = 'red';
+          deleteBtn.style.color = 'white';
+          deleteBtn.innerHTML = 'Delete';
+          deleteBtn.addEventListener('click', () => {
+            displayDeleteForm(product._id,
+              product.medicalName, product.name, product.companyName, product.form)
+          })
+
+          row.appendChild(med);
+          row.appendChild(name);
+          row.appendChild(comapny);
+          row.appendChild(form);
+          row.appendChild(deleteBtn);
+          row.appendChild(editBtn);
+
+          row.classList.add('p-row')
+          productsDiv.appendChild(row);
+        })
+      })
+    }
+
+    const editApiCall = () => {
+      const body = {
+        name: updateName.value,
+        medicalName: updateMedName.value,
+        companyName: updateCompanyName.value,
+        form: updateSelectForm.value,
+      }
+      loader.classList.remove('hide');
+      loader.classList.add('loadingDiv');
+      fetch(`https://pharm-pro.herokuapp.com/api/products/${productId}`, {
+        method: 'put',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }).then(res => res.json()).then(res => {
+        editModal.style.display = "none";
+        success.classList.remove('hide');
+        success.classList.add('success');
+        setTimeout(() => {
+          success.classList.remove('success');
+          success.classList.add('hide');
+        }, 2000);
+        productsDiv.innerHTML = '';
+        loadProducts();
+      }).catch(e => {
+        loader.classList.remove('loadingDiv');
+        loader.classList.add('hide');
+        console.log(e);
+      })
+    }
+
+    const deleteApiCall = () => {
+      loader.classList.remove('hide');
+      loader.classList.add('loadingDiv');
+      fetch(`https://pharm-pro.herokuapp.com/api/products/${productId}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'delete'
+      }).then(res => res.json()).then(response => {
+        deleteModal.style.display = 'none';
+        success.classList.remove('hide');
+        success.classList.add('success');
+        setTimeout(() => {
+          success.classList.remove('success');
+          success.classList.add('hide');
+        }, 2000);
+        productsDiv.innerHTML = '';
+        loadProducts();
+      }).catch(e => {
+        loader.classList.remove('loadingDiv');
+        loader.classList.add('hide');
+      });
+    }
+
+    window.onclick = function (event) {
+      if (event.target == editModal) {
+        editModal.style.display = "none";
+      }
+      if (event.target == deleteModal) {
+        deleteModal.style.display = "none";
+      }
+    }
+    loadProducts();
+  </script>
+</body>
+
+</html>
