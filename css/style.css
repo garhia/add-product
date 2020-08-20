@@ -234,6 +234,7 @@ main{
   border: none;
   background-color: #2196f3;
   color: white;
+  cursor: pointer;
 }
 
 .search-div {
